@@ -15,8 +15,48 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                </div>
+
+                    @if(auth()->user()->role == 'admin')
+
+                    <x-nav-link
+                        :href="route('lokasi.index')"
+                        :active="request()->routeIs('lokasi.*')">
+
+                            Lokasi
+
+                    </x-nav-link>
+
+                 <x-nav-link
+                 :href="route('kategori.index')"
+                :active="request()->routeIs('kategori.*')">
+
+                 Kategori Kerusakan
+
+                </x-nav-link>
+
+                 <x-nav-link
+                 :href="route('user.index')"
+                 :active="request()->routeIs('user.*')">
+
+                 User
+
+                 </x-nav-link>
+
+              @endif
+
+            <x-nav-link :href="route('laporan.index')"
+                :active="request()->routeIs('laporan.*')">
+
+                {{ auth()->user()->role == 'admin'
+                ? 'Laporan'
+                : 'Laporan Saya' }}
+
+                </x-nav-link>
+
+                 </div>
             </div>
+
+        
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -68,9 +108,57 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+                {{ __('Dashboard1') }}
             </x-responsive-nav-link>
+
+            @if(auth()->user()->role == 'admin')
+
+    <x-responsive-nav-link
+        :href="route('lokasi.index')"
+        :active="request()->routeIs('lokasi.*')">
+
+        Lokasi
+
+    </x-responsive-nav-link>
+
+    <x-responsive-nav-link
+        :href="route('kategori.index')"
+        :active="request()->routeIs('kategori.*')">
+
+        Kategori Kerusakan
+
+    </x-responsive-nav-link>
+
+    <x-responsive-nav-link
+        :href="route('user.index')"
+        :active="request()->routeIs('user.*')">
+
+        User
+
+    </x-responsive-nav-link>
+
+@endif
+
+        <x-responsive-nav-link
+        :href="route('laporan.index')"
+        :active="request()->routeIs('laporan.*')">
+
+        {{ auth()->user()->role == 'admin'
+        ? 'Laporan'
+        : 'Laporan Saya' }}
+
+        </x-responsive-nav-link>
+
+        <x-responsive-nav-link
+                :href="route('user.index')"
+                :active="request()->routeIs('user.*')">
+
+                User
+
+            </x-responsive-nav-link>
+
         </div>
+
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
