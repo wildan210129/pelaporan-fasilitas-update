@@ -42,6 +42,14 @@
 
                  </x-nav-link>
 
+                 <x-nav-link
+                :href="route('petugas.index')"
+                :active="request()->routeIs('petugas.*')">
+
+                Petugas
+
+            </x-nav-link>
+
               @endif
 
             <x-nav-link :href="route('laporan.index')"
@@ -134,6 +142,14 @@
         :active="request()->routeIs('user.*')">
 
         User
+
+    </x-responsive-nav-link>
+
+    <x-responsive-nav-link
+        :href="route('petugas.index')"
+        :active="request()->routeIs('petugas.*')">
+
+        Petugas
 
     </x-responsive-nav-link>
 

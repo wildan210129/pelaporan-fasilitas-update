@@ -144,19 +144,20 @@
                                 </a>
 
                                  <button
-                                  onclick="editLaporan(
+                                    onclick="editLaporan(
                                     '{{ $item->id }}',
-                                     '{{ $item->judul }}',
-                                     '{{ $item->lokasi_id }}',
+                                    '{{ $item->judul }}',
+                                    '{{ $item->lokasi_id }}',
                                     '{{ $item->kategori_kerusakan_id }}',
-                                     `{{ $item->deskripsi }}`,
-                                     '{{ $item->status }}'
+                                    `{{ $item->deskripsi }}`,
+                                    '{{ $item->status }}',
+                                    '{{ $item->petugas_id }}'
                                     )"
-                                       class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
+                                    class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
 
-                                      Edit
+                                    Edit
 
-                                     </button>
+                                    </button>
 
                                     <button
                                      onclick="hapusLaporan('{{ $item->id }}')"
@@ -342,7 +343,7 @@
 <div id="modalEdit"
     class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
 
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
 
         <div class="flex justify-between items-center border-b px-6 py-4">
             <h2 class="text-xl font-bold">
@@ -446,7 +447,30 @@
 
                  </select>
                 </div>
+                <div class="col-span-2">
 
+                    <label class="block mb-2 font-semibold">
+                        Petugas
+                    </label>
+
+                    <select
+                        id="editPetugas"
+                        name="petugas_id"
+                        class="w-full border rounded-lg px-3 py-2">
+
+                        <option value="">-- Pilih Petugas --</option>
+
+                        @foreach($petugas as $p)
+
+                            <option value="{{ $p->id }}">
+                                {{ $p->name }}
+                            </option>
+
+                        @endforeach
+
+                    </select>
+
+                </div>
                 <div class="col-span-2">
                     <label class="block mb-2 font-semibold">
                         Ganti Foto (Opsional)
@@ -554,13 +578,22 @@
     </div>
     <script>
 
-function editLaporan(id, judul, lokasi, kategori, deskripsi, status)
+function editLaporan(
+    id,
+    judul,
+    lokasi,
+    kategori,
+    deskripsi,
+    status,
+    petugas
+)
 {
     document.getElementById('editJudul').value = judul;
     document.getElementById('editLokasi').value = lokasi;
     document.getElementById('editKategori').value = kategori;
     document.getElementById('editDeskripsi').value = deskripsi;
     document.getElementById('editStatus').value = status;
+    document.getElementById('editPetugas').value = petugas;
 
     document.getElementById('formEdit').action = "/laporan/" + id;
 

@@ -9,11 +9,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\RiwayatStatus;
+use App\Models\User;
 
 class LaporanController extends Controller
 {
    public function index()
 {
+    $petugas = User::where('role', 'petugas')->get();
+
     if (auth()->user()->role == 'admin') {
 
         $laporan = Laporan::with(['lokasi', 'kategori', 'user'])
@@ -35,7 +38,8 @@ class LaporanController extends Controller
     return view('laporan.index', compact(
         'laporan',
         'lokasi',
-        'kategori'
+        'kategori',
+        'petugas'
     ));
 }
 
@@ -88,8 +92,9 @@ class LaporanController extends Controller
         'kategori_kerusakan_id' => 'required|exists:kategori_kerusakans,id',
         'deskripsi' => 'required',
         'status' => 'required|in:Menunggu,Diproses,Selesai',
+        'petugas_id' => 'nullable|exists:users,id',
         'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-     ]);
+    ]);
 
         $foto = $laporan->foto;
 
@@ -102,12 +107,13 @@ class LaporanController extends Controller
             $foto = $request->file('foto')->store('laporan', 'public');
         }
 
-        $laporan->update([
+      $laporan->update([
     'judul' => $request->judul,
     'lokasi_id' => $request->lokasi_id,
     'kategori_kerusakan_id' => $request->kategori_kerusakan_id,
     'deskripsi' => $request->deskripsi,
     'status' => $request->status,
+    'petugas_id' => $request->petugas_id,
     'foto' => $foto,
 ]);
 
@@ -142,7 +148,12 @@ class LaporanController extends Controller
     
     public function show(Laporan $laporan)
 {
-    $laporan->load('riwayatStatus.user');
+    $laporan->load(
+    'lokasi',
+    'kategori',
+    'petugas',
+    'riwayatStatus.user'
+);
 
     return view('laporan.show', compact('laporan'));
 }

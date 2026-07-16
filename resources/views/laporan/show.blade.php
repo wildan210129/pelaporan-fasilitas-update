@@ -38,7 +38,13 @@
                     </div>
 
                 </div>
+                <div class="mt-6">
+                    <h3 class="font-bold">Petugas</h3>
 
+                    <p>
+                        {{ $laporan->petugas?->name ?? 'Belum ditugaskan' }}
+                    </p>
+                </div>
             </div>
 
             <div class="bg-white rounded-lg shadow mt-6 p-6">

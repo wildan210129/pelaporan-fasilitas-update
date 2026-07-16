@@ -36,6 +36,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::resource('user', UserController::class);
 
+    Route::resource('petugas', App\Http\Controllers\PetugasController::class);
+
 });
 
 require __DIR__.'/auth.php';

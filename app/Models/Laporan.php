@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\RiwayatStatus;
+use App\Models\User;
 
 class Laporan extends Model
 {
@@ -18,6 +19,7 @@ class Laporan extends Model
     'deskripsi',
     'foto',
     'status',
+    'petugas_id',
 ];
 
     public function riwayatStatus()
@@ -39,5 +41,10 @@ class Laporan extends Model
     public function kategori()
     {
         return $this->belongsTo(KategoriKerusakan::class, 'kategori_kerusakan_id');
+    }
+
+    public function petugas()
+    {
+        return $this->belongsTo(User::class, 'petugas_id');
     }
 }
