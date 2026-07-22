@@ -1,65 +1,254 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Data Laporan Kerusakan') }}
-        </h2>
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <h2 class="text-3xl font-bold text-gray-800">
+
+                    📋 Data Laporan Kerusakan
+
+                </h2>
+
+                <p class="text-gray-500 mt-1">
+
+                    Kelola seluruh laporan kerusakan fasilitas sekolah.
+
+                </p>
+
+            </div>
+
+            <div>
+
+                <span
+                    class="px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-semibold">
+
+                    {{ now()->format('d F Y') }}
+
+                </span>
+
+            </div>
+
+        </div>
+
     </x-slot>
 
-    <div class="py-6">
+    <div class="py-8">
+
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
             @if(session('success'))
-                <div class="mb-4 rounded-lg bg-green-100 border border-green-300 text-green-700 px-4 py-3">
-                    {{ session('success') }}
+
+            <div
+                class="mb-6 rounded-xl bg-green-50 border border-green-300 text-green-700 px-5 py-4 shadow">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="text-2xl">
+
+                        ✅
+
+                    </div>
+
+                    <div>
+
+                        {{ session('success') }}
+
+                    </div>
+
                 </div>
+
+            </div>
+
             @endif
 
-            <div class="bg-white shadow rounded-lg p-6">
+            <!-- HERO -->
 
-                <div class="flex justify-between items-center mb-6">
+            <div
+                class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl shadow-xl p-8 text-white">
 
-                    <h3 class="text-xl font-bold">
-                        Daftar Laporan Kerusakan
-                    </h3>
+                <div class="flex flex-col lg:flex-row items-center justify-between">
 
-                   @if(auth()->user()->role == 'siswa')
+                    <div>
 
-                <button
-                 onclick="document.getElementById('modalTambah').classList.remove('hidden')"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                        <h1 class="text-4xl font-bold">
 
-                + Tambah Laporan
+                            🛠 Sistem Pelaporan Kerusakan
 
-                </button>
+                        </h1>
 
-                @endif
+                        <p class="mt-3 text-blue-100 max-w-xl">
+
+                            Kelola seluruh laporan kerusakan fasilitas sekolah dengan
+                            lebih cepat, modern, dan efisien.
+
+                        </p>
+
+                    </div>
+
+                    @if(auth()->user()->role=='siswa')
+
+                    <button
+
+                        onclick="document.getElementById('modalTambah').classList.remove('hidden')"
+
+                        class="mt-6 lg:mt-0 bg-white text-blue-700 px-6 py-3 rounded-xl font-bold hover:scale-105 transition shadow-lg">
+
+                        ➕ Tambah Laporan
+
+                    </button>
+
+                    @endif
+
+                </div>
+
+            </div>
+
+            <!-- Statistik -->
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+
+                <div
+                    class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-500">
+
+                    <p class="text-gray-500">
+
+                        Total Laporan
+
+                    </p>
+
+                    <h2 class="text-4xl font-bold mt-3">
+
+                        {{ $laporan->count() }}
+
+                    </h2>
+
+                </div>
+
+                <div
+                    class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-yellow-500">
+
+                    <p class="text-gray-500">
+
+                        Menunggu
+
+                    </p>
+
+                    <h2 class="text-4xl font-bold mt-3 text-yellow-600">
+
+                        {{ $laporan->where('status','Menunggu')->count() }}
+
+                    </h2>
+
+                </div>
+
+                <div
+                    class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-green-500">
+
+                    <p class="text-gray-500">
+
+                        Selesai
+
+                    </p>
+
+                    <h2 class="text-4xl font-bold mt-3 text-green-600">
+
+                        {{ $laporan->where('status','Selesai')->count() }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+            <!-- CARD TABEL -->
+
+            <div class="bg-white rounded-3xl shadow-xl mt-8 overflow-hidden">
+
+                <div
+                    class="flex flex-col lg:flex-row justify-between items-center px-8 py-6 border-b">
+
+                    <div>
+
+                        <h2 class="text-2xl font-bold">
+
+                            Daftar Laporan
+
+                        </h2>
+
+                        <p class="text-gray-500">
+
+                            Seluruh data laporan kerusakan fasilitas.
+
+                        </p>
+
+                    </div>
+
+                    <div class="mt-4 lg:mt-0">
+
+                        <input
+
+                            type="text"
+
+                            placeholder="🔍 Cari laporan..."
+
+                            class="rounded-xl border-gray-300 focus:ring-blue-500 focus:border-blue-500 w-72">
+
+                    </div>
 
                 </div>
 
                 <div class="overflow-x-auto">
 
-                    <table class="min-w-full border border-gray-300">
+                    <table class="min-w-full">
 
                         <thead class="bg-gray-100">
 
                             <tr>
 
-                                <th class="border px-4 py-3">No</th>
+                                <th class="px-6 py-4 text-left">
 
-                                <th class="border px-4 py-3">Judul</th>
+                                    No
 
-                                <th class="border px-4 py-3">Lokasi</th>
+                                </th>
 
-                                <th class="border px-4 py-3">Kategori</th>
+                                <th class="px-6 py-4 text-left">
 
-                                <th class="border px-4 py-3">Deskripsi</th>
+                                    Judul
 
-                                <th class="border px-4 py-3">Status</th>
+                                </th>
 
-                                <th class="border px-4 py-3">Foto</th>
+                                <th class="px-6 py-4 text-left">
 
-                                <th class="border px-4 py-3">Aksi</th>
+                                    Lokasi
+
+                                </th>
+
+                                <th class="px-6 py-4 text-left">
+
+                                    Kategori
+
+                                </th>
+
+                                <th class="px-6 py-4 text-left">
+
+                                    Status
+
+                                </th>
+
+                                <th class="px-6 py-4 text-center">
+
+                                    Foto
+
+                                </th>
+
+                                <th class="px-6 py-4 text-center">
+
+                                    Aksi
+
+                                </th>
 
                             </tr>
 
@@ -69,125 +258,207 @@
 
                             @forelse($laporan as $item)
 
-                                <tr>
+                            <tr class="border-b hover:bg-blue-50 transition duration-200">
 
-                                    <td class="border px-4 py-3 text-center">
-                                        {{ $loop->iteration }}
-                                    </td>
+                                <td class="px-6 py-5 font-semibold text-gray-600">
 
-                                    <td class="border px-4 py-3">
-                                        {{ $item->judul }}
-                                    </td>
+                                    {{ $loop->iteration }}
 
-                                    <td class="border px-4 py-3">
-                                        {{ $item->lokasi->nama_lokasi }}
-                                    </td>
+                                </td>
 
-                                    <td class="border px-4 py-3">
+                                <td class="px-6 py-5">
+
+                                    <div>
+
+                                        <h3 class="font-bold text-gray-800">
+
+                                            {{ $item->judul }}
+
+                                        </h3>
+
+                                        <p class="text-sm text-gray-500 mt-1">
+
+                                            {{ Str::limit($item->deskripsi,60) }}
+
+                                        </p>
+
+                                    </div>
+
+                                </td>
+
+                                <td class="px-6 py-5">
+
+                                    <span
+                                        class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-sm">
+
+                                        📍 {{ $item->lokasi->nama_lokasi }}
+
+                                    </span>
+
+                                </td>
+
+                                <td class="px-6 py-5">
+
+                                    <span
+                                        class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm">
+
                                         {{ $item->kategori->nama_kategori }}
-                                    </td>
 
-                                    <td class="border px-4 py-3">
-                                        {{ $item->deskripsi }}
-                                    </td>
+                                    </span>
 
-                                    <td class="border px-4 py-3 text-center">
+                                </td>
 
-                                        @if($item->status == 'Menunggu')
+                                <td class="px-6 py-5">
 
-                                            <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
-                                                Menunggu
-                                            </span>
+                                    @if($item->status=="Menunggu")
 
-                                        @elseif($item->status == 'Diproses')
+                                    <span
+                                        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-100 text-yellow-700 text-sm font-semibold">
 
-                                            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
-                                                Diproses
-                                            </span>
+                                        🟡 Menunggu
 
-                                        @else
+                                    </span>
 
-                                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                                                Selesai
-                                            </span>
+                                    @elseif($item->status=="Diproses")
 
-                                        @endif
+                                    <span
+                                        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold">
 
-                                    </td>
+                                        🔵 Diproses
 
-                                    <td class="border px-4 py-3 text-center">
-
-                                        @if($item->foto)
-
-                                            <img
-                                                src="{{ asset('storage/'.$item->foto) }}"
-                                                class="w-16 h-16 object-cover rounded mx-auto">
-
-                                        @else
-
-                                            -
-
-                                        @endif
-
-                                    </td>
-
-                                   <td class="border px-4 py-3 text-center space-x-2">
-
-                                 @if(auth()->user()->role == 'admin')
-
-                                 <a
-                                    href="{{ route('laporan.show', $item->id) }}"
-                                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
-
-                                    Detail
-
-                                </a>
-
-                                 <button
-                                    onclick="editLaporan(
-                                    '{{ $item->id }}',
-                                    '{{ $item->judul }}',
-                                    '{{ $item->lokasi_id }}',
-                                    '{{ $item->kategori_kerusakan_id }}',
-                                    `{{ $item->deskripsi }}`,
-                                    '{{ $item->status }}',
-                                    '{{ $item->petugas_id }}'
-                                    )"
-                                    class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
-
-                                    Edit
-
-                                    </button>
-
-                                    <button
-                                     onclick="hapusLaporan('{{ $item->id }}')"
-                                     class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
-
-                                     Hapus
-
-                                    </button>
+                                    </span>
 
                                     @else
 
-                                    <span class="text-gray-500 text-sm">
-                                      Tidak ada aksi
+                                    <span
+                                        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
+
+                                        🟢 Selesai
+
                                     </span>
 
-                                     @endif
+                                    @endif
 
-                                    </td>
+                                </td>
 
-                                </tr>
+                                <td class="px-6 py-5 text-center">
+
+                                    @if($item->foto)
+
+                                    <img
+
+                                        src="{{ asset('storage/'.$item->foto) }}"
+
+                                        class="w-20 h-20 object-cover rounded-2xl border shadow mx-auto hover:scale-110 transition cursor-pointer">
+
+                                    @else
+
+                                    <div
+                                        class="w-20 h-20 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto text-gray-400">
+
+                                        📷
+
+                                    </div>
+
+                                    @endif
+
+                                </td>
+
+                                <td class="px-6 py-5">
+
+                                    <div class="flex justify-center gap-2">
+
+                                        <a
+
+                                            href="{{ route('laporan.show',$item->id) }}"
+
+                                            class="px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition">
+
+                                            Detail
+
+                                        </a>
+
+                                        @if(auth()->user()->role=="admin")
+
+                                        <button
+
+                                            onclick="editLaporan(
+
+'{{ $item->id }}',
+
+'{{ $item->judul }}',
+
+'{{ $item->lokasi_id }}',
+
+'{{ $item->kategori_kerusakan_id }}',
+
+`{{ $item->deskripsi }}`,
+
+'{{ $item->status }}',
+
+'{{ $item->petugas_id }}'
+
+)"
+
+                                            class="px-4 py-2 rounded-xl bg-yellow-500 text-white hover:bg-yellow-600 transition">
+
+                                            Edit
+
+                                        </button>
+
+                                        <button
+
+                                            onclick="hapusLaporan('{{ $item->id }}')"
+
+                                            class="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 transition">
+
+                                            Hapus
+
+                                        </button>
+
+                                        @endif
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
 
                             @empty
 
-                                <tr>
+                            <tr>
 
-                                    <td colspan="8" class="border px-4 py-6 text-center text-gray-500">
-                                        Belum ada laporan.
-                                    </td>
+                                <td
 
-                                </tr>
+                                    colspan="7"
+
+                                    class="text-center py-20">
+
+                                    <div class="flex flex-col items-center">
+
+                                        <div class="text-6xl">
+
+                                            📂
+
+                                        </div>
+
+                                        <h3 class="text-2xl font-bold mt-4">
+
+                                            Belum Ada Laporan
+
+                                        </h3>
+
+                                        <p class="text-gray-500 mt-2">
+
+                                            Silakan membuat laporan baru.
+
+                                        </p>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
 
                             @endforelse
 
@@ -199,426 +470,679 @@
 
             </div>
 
+            <!-- ===================== -->
+            <!-- MODAL TAMBAH LAPORAN -->
+            <!-- ===================== -->
+
+            <div id="modalTambah"
+                class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+
+                <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden animate-fade">
+
+                    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6 flex justify-between items-center">
+
+                        <div>
+
+                            <h2 class="text-2xl font-bold text-white">
+
+                                ➕ Tambah Laporan
+
+                            </h2>
+
+                            <p class="text-blue-100 mt-1">
+
+                                Silakan isi data laporan kerusakan.
+
+                            </p>
+
+                        </div>
+
+                        <button
+
+                            type="button"
+
+                            onclick="document.getElementById('modalTambah').classList.add('hidden')"
+
+                            class="text-white text-3xl hover:rotate-90 transition">
+
+                            &times;
+
+                        </button>
+
+                    </div>
+
+                    <form
+                        action="{{ route('laporan.store') }}"
+                        method="POST"
+                        enctype="multipart/form-data">
+
+                        @csrf
+
+                        <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                            <div class="md:col-span-2">
+
+                                <label class="font-semibold text-gray-700">
+
+                                    Judul Kerusakan
+
+                                </label>
+
+                                <input
+
+                                    type="text"
+
+                                    name="judul"
+
+                                    required
+
+                                    placeholder="Contoh : Proyektor Rusak"
+
+                                    class="mt-2 w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+
+                            </div>
+
+                            <div>
+
+                                <label class="font-semibold text-gray-700">
+
+                                    Lokasi
+
+                                </label>
+
+                                <select
+
+                                    name="lokasi_id"
+
+                                    required
+
+                                    class="mt-2 w-full rounded-xl border-gray-300 focus:border-blue-500">
+
+                                    <option value="">
+
+                                        Pilih Lokasi
+
+                                    </option>
+
+                                    @foreach($lokasi as $l)
+
+                                    <option value="{{ $l->id }}">
+
+                                        {{ $l->nama_lokasi }}
+
+                                    </option>
+
+                                    @endforeach
+
+                                </select>
+
+                            </div>
+
+                            <div>
+
+                                <label class="font-semibold text-gray-700">
+
+                                    Kategori
+
+                                </label>
+
+                                <select
+
+                                    name="kategori_kerusakan_id"
+
+                                    required
+
+                                    class="mt-2 w-full rounded-xl border-gray-300 focus:border-blue-500">
+
+                                    <option value="">
+
+                                        Pilih Kategori
+
+                                    </option>
+
+                                    @foreach($kategori as $k)
+
+                                    <option value="{{ $k->id }}">
+
+                                        {{ $k->nama_kategori }}
+
+                                    </option>
+
+                                    @endforeach
+
+                                </select>
+
+                            </div>
+
+                            <div class="md:col-span-2">
+
+                                <label class="font-semibold text-gray-700">
+
+                                    Deskripsi
+
+                                </label>
+
+                                <textarea
+
+                                    name="deskripsi"
+
+                                    rows="5"
+
+                                    required
+
+                                    placeholder="Jelaskan kerusakan..."
+
+                                    class="mt-2 w-full rounded-xl border-gray-300 focus:border-blue-500"></textarea>
+
+                            </div>
+
+                            <div class="md:col-span-2">
+
+                                <label class="font-semibold text-gray-700">
+
+                                    Upload Foto
+
+                                </label>
+
+                                <input
+
+                                    type="file"
+
+                                    name="foto"
+
+                                    accept="image/*"
+
+                                    class="mt-2 w-full rounded-xl border-gray-300">
+
+                                <p class="text-sm text-gray-500 mt-2">
+
+                                    Format JPG, JPEG, PNG maksimal 2 MB.
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="bg-gray-50 px-8 py-5 flex justify-end gap-3">
+
+                            <button
+
+                                type="button"
+
+                                onclick="document.getElementById('modalTambah').classList.add('hidden')"
+
+                                class="px-6 py-3 rounded-xl bg-gray-200 hover:bg-gray-300 font-semibold">
+
+                                Batal
+
+                            </button>
+
+                            <button
+
+                                type="submit"
+
+                                class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-lg">
+
+                                💾 Simpan Laporan
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            <!-- ===================== -->
+            <!-- MODAL EDIT LAPORAN -->
+            <!-- ===================== -->
+
+            <div id="modalEdit"
+                class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+                <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden">
+
+                    <div class="bg-gradient-to-r from-yellow-500 to-orange-500 px-8 py-6 flex justify-between items-center">
+
+                        <div>
+
+                            <h2 class="text-2xl font-bold text-white">
+
+                                ✏ Edit Laporan
+
+                            </h2>
+
+                            <p class="text-yellow-100 mt-1">
+
+                                Perbarui informasi laporan kerusakan.
+
+                            </p>
+
+                        </div>
+
+                        <button
+
+                            type="button"
+
+                            onclick="tutupModalEdit()"
+
+                            class="text-white text-3xl hover:rotate-90 transition">
+
+                            &times;
+
+                        </button>
+
+                    </div>
+
+                    <form
+                        id="formEdit"
+                        method="POST"
+                        enctype="multipart/form-data">
+
+                        @csrf
+                        @method('PUT')
+
+                        <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                            <div class="md:col-span-2">
+
+                                <label class="font-semibold text-gray-700">
+
+                                    Judul Kerusakan
+
+                                </label>
+
+                                <input
+
+                                    id="editJudul"
+
+                                    type="text"
+
+                                    name="judul"
+
+                                    required
+
+                                    class="mt-2 w-full rounded-xl border-gray-300 focus:ring-yellow-500 focus:border-yellow-500">
+
+                            </div>
+
+                            <div>
+
+                                <label class="font-semibold text-gray-700">
+
+                                    Lokasi
+
+                                </label>
+
+                                <select
+
+                                    id="editLokasi"
+
+                                    name="lokasi_id"
+
+                                    class="mt-2 w-full rounded-xl border-gray-300">
+
+                                    @foreach($lokasi as $l)
+
+                                    <option value="{{ $l->id }}">
+
+                                        {{ $l->nama_lokasi }}
+
+                                    </option>
+
+                                    @endforeach
+
+                                </select>
+
+                            </div>
+
+                            <div>
+
+                                <label class="font-semibold text-gray-700">
+
+                                    Kategori
+
+                                </label>
+
+                                <select
+
+                                    id="editKategori"
+
+                                    name="kategori_kerusakan_id"
+
+                                    class="mt-2 w-full rounded-xl border-gray-300">
+
+                                    @foreach($kategori as $k)
+
+                                    <option value="{{ $k->id }}">
+
+                                        {{ $k->nama_kategori }}
+
+                                    </option>
+
+                                    @endforeach
+
+                                </select>
+
+                            </div>
+
+                            <div class="md:col-span-2">
+
+                                <label class="font-semibold text-gray-700">
+
+                                    Deskripsi
+
+                                </label>
+
+                                <textarea
+
+                                    id="editDeskripsi"
+
+                                    name="deskripsi"
+
+                                    rows="5"
+
+                                    class="mt-2 w-full rounded-xl border-gray-300"></textarea>
+
+                            </div>
+
+                            <div>
+
+                                <label class="font-semibold text-gray-700">
+
+                                    Status
+
+                                </label>
+
+                                <select
+
+                                    id="editStatus"
+
+                                    name="status"
+
+                                    class="mt-2 w-full rounded-xl border-gray-300">
+
+                                    <option value="Menunggu">
+
+                                        Menunggu
+
+                                    </option>
+
+                                    <option value="Diproses">
+
+                                        Diproses
+
+                                    </option>
+
+                                    <option value="Selesai">
+
+                                        Selesai
+
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div>
+
+                                <label class="font-semibold text-gray-700">
+
+                                    Petugas
+
+                                </label>
+
+                                <select
+
+                                    id="editPetugas"
+
+                                    name="petugas_id"
+
+                                    class="mt-2 w-full rounded-xl border-gray-300">
+
+                                    <option value="">
+
+                                        Pilih Petugas
+
+                                    </option>
+
+                                    @foreach($petugas as $p)
+
+                                    <option value="{{ $p->id }}">
+
+                                        {{ $p->name }}
+
+                                    </option>
+
+                                    @endforeach
+
+                                </select>
+
+                            </div>
+
+                            <div class="md:col-span-2">
+
+                                <label class="font-semibold text-gray-700">
+
+                                    Ganti Foto
+
+                                </label>
+
+                                <input
+
+                                    type="file"
+
+                                    name="foto"
+
+                                    accept="image/*"
+
+                                    class="mt-2 w-full rounded-xl border-gray-300">
+
+                            </div>
+
+                        </div>
+
+                        <div class="bg-gray-50 px-8 py-5 flex justify-end gap-3">
+
+                            <button
+
+                                type="button"
+
+                                onclick="tutupModalEdit()"
+
+                                class="px-6 py-3 rounded-xl bg-gray-300 hover:bg-gray-400">
+
+                                Batal
+
+                            </button>
+
+                            <button
+
+                                type="submit"
+
+                                class="px-6 py-3 rounded-xl bg-yellow-500 hover:bg-yellow-600 text-white font-bold shadow-lg">
+
+                                💾 Update Laporan
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            <!-- ===================== -->
+            <!-- MODAL DELETE -->
+            <!-- ===================== -->
+
+            <div id="modalDelete"
+                class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+
+                <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden">
+
+                    <div class="bg-red-600 p-6 text-center">
+
+                        <div class="text-6xl">
+
+                            🗑
+
+                        </div>
+
+                        <h2 class="text-2xl font-bold text-white mt-3">
+
+                            Hapus Laporan
+
+                        </h2>
+
+                        <p class="text-red-100 mt-2">
+
+                            Data yang dihapus tidak dapat dikembalikan.
+
+                        </p>
+
+                    </div>
+
+                    <form id="formDelete" method="POST">
+
+                        @csrf
+                        @method('DELETE')
+
+                        <div class="p-8 text-center">
+
+                            <p class="text-gray-600">
+
+                                Apakah Anda yakin ingin menghapus laporan ini?
+
+                            </p>
+
+                            <div class="flex justify-center gap-4 mt-8">
+
+                                <button
+
+                                    type="button"
+
+                                    onclick="tutupDelete()"
+
+                                    class="px-6 py-3 rounded-xl bg-gray-200 hover:bg-gray-300">
+
+                                    Batal
+
+                                </button>
+
+                                <button
+
+                                    type="submit"
+
+                                    class="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold">
+
+                                    Ya, Hapus
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            <script>
+                function editLaporan(
+                    id,
+                    judul,
+                    lokasi,
+                    kategori,
+                    deskripsi,
+                    status,
+                    petugas
+                ) {
+
+                    document.getElementById('editJudul').value = judul;
+                    document.getElementById('editLokasi').value = lokasi;
+                    document.getElementById('editKategori').value = kategori;
+                    document.getElementById('editDeskripsi').value = deskripsi;
+                    document.getElementById('editStatus').value = status;
+                    document.getElementById('editPetugas').value = petugas;
+
+                    document.getElementById('formEdit').action = "/laporan/" + id;
+
+                    document.getElementById('modalEdit').classList.remove('hidden');
+
+                }
+
+                function tutupModalEdit() {
+
+                    document.getElementById('modalEdit').classList.add('hidden');
+
+                }
+
+                function hapusLaporan(id) {
+
+                    document.getElementById('formDelete').action = "/laporan/" + id;
+
+                    document.getElementById('modalDelete').classList.remove('hidden');
+
+                }
+
+                function tutupDelete() {
+
+                    document.getElementById('modalDelete').classList.add('hidden');
+
+                }
+
+                // klik area hitam untuk menutup modal
+                window.onclick = function(e) {
+
+                    const tambah = document.getElementById('modalTambah');
+                    const edit = document.getElementById('modalEdit');
+                    const hapus = document.getElementById('modalDelete');
+
+                    if (e.target === tambah)
+                        tambah.classList.add('hidden');
+
+                    if (e.target === edit)
+                        edit.classList.add('hidden');
+
+                    if (e.target === hapus)
+                        hapus.classList.add('hidden');
+
+                }
+            </script>
+
+            <style>
+                @keyframes fadeScale {
+
+                    0% {
+
+                        opacity: 0;
+                        transform: scale(.95);
+
+                    }
+
+                    100% {
+
+                        opacity: 1;
+                        transform: scale(1);
+
+                    }
+
+                }
+
+                .animate-fade {
+
+                    animation: fadeScale .25s ease;
+
+                }
+            </style>
+
         </div>
-    </div>
-
-    {{-- Modal Tambah akan ditempel di sini --}}
-    <!-- Modal Tambah -->
-<div id="modalTambah"
-    class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl">
-
-        <div class="flex justify-between items-center border-b px-6 py-4">
-            <h2 class="text-xl font-bold">
-                Tambah Laporan Kerusakan
-            </h2>
-
-            <button
-                type="button"
-                onclick="document.getElementById('modalTambah').classList.add('hidden')"
-                class="text-2xl text-gray-500 hover:text-gray-700">
-                &times;
-            </button>
-        </div>
-
-        <form action="{{ route('laporan.store') }}"
-            method="POST"
-            enctype="multipart/form-data">
-
-            @csrf
-
-            <div class="p-6 grid grid-cols-2 gap-4">
-
-                <div class="col-span-2">
-                    <label class="block mb-2 font-semibold">
-                        Judul Kerusakan
-                    </label>
-
-                    <input
-                        type="text"
-                        name="judul"
-                        class="w-full border rounded-lg px-3 py-2"
-                        placeholder="Masukkan judul kerusakan"
-                        required>
-                </div>
-
-                <div>
-                    <label class="block mb-2 font-semibold">
-                        Lokasi
-                    </label>
-
-                    <select
-                        name="lokasi_id"
-                        class="w-full border rounded-lg px-3 py-2"
-                        required>
-
-                        <option value="">-- Pilih Lokasi --</option>
-
-                        @foreach($lokasi as $l)
-                            <option value="{{ $l->id }}">
-                                {{ $l->nama_lokasi }}
-                            </option>
-                        @endforeach
-
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block mb-2 font-semibold">
-                        Kategori
-                    </label>
-
-                    <select
-                        name="kategori_kerusakan_id"
-                        class="w-full border rounded-lg px-3 py-2"
-                        required>
-
-                        <option value="">-- Pilih Kategori --</option>
-
-                        @foreach($kategori as $k)
-                            <option value="{{ $k->id }}">
-                                {{ $k->nama_kategori }}
-                            </option>
-                        @endforeach
-
-                    </select>
-                </div>
-
-                <div class="col-span-2">
-                    <label class="block mb-2 font-semibold">
-                        Deskripsi
-                    </label>
-
-                    <textarea
-                        name="deskripsi"
-                        rows="4"
-                        class="w-full border rounded-lg px-3 py-2"
-                        placeholder="Jelaskan kerusakan..."
-                        required></textarea>
-                </div>
-
-                <div class="col-span-2">
-                    <label class="block mb-2 font-semibold">
-                        Upload Foto
-                    </label>
-
-                    <input
-                        type="file"
-                        name="foto"
-                        accept="image/*"
-                        class="w-full border rounded-lg px-3 py-2">
-                </div>
-
-            </div>
-
-            <div class="flex justify-end gap-2 border-t px-6 py-4">
-
-                <button
-                    type="button"
-                    onclick="document.getElementById('modalTambah').classList.add('hidden')"
-                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
-
-                    Batal
-
-                </button>
-
-                <button
-                    type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-
-                    Simpan
-
-                </button>
-
-            </div>
-
-        </form>
-
-    </div>
-
-</div>
-    {{-- Modal Edit akan ditempel di sini --}}
-    <!-- Modal Edit -->
-<div id="modalEdit"
-    class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-
-        <div class="flex justify-between items-center border-b px-6 py-4">
-            <h2 class="text-xl font-bold">
-                Edit Laporan Kerusakan
-            </h2>
-
-            <button
-                type="button"
-                onclick="tutupModalEdit()"
-                class="text-2xl text-gray-500 hover:text-gray-700">
-                &times;
-            </button>
-        </div>
-
-        <form id="formEdit"
-            method="POST"
-            enctype="multipart/form-data">
-
-            @csrf
-            @method('PUT')
-
-            <div class="p-6 grid grid-cols-2 gap-4">
-
-                <div class="col-span-2">
-                    <label class="block mb-2 font-semibold">
-                        Judul Kerusakan
-                    </label>
-
-                    <input
-                        type="text"
-                        id="editJudul"
-                        name="judul"
-                        class="w-full border rounded-lg px-3 py-2"
-                        required>
-                </div>
-
-                <div>
-                    <label class="block mb-2 font-semibold">
-                        Lokasi
-                    </label>
-
-                    <select
-                        id="editLokasi"
-                        name="lokasi_id"
-                        class="w-full border rounded-lg px-3 py-2">
-
-                        @foreach($lokasi as $l)
-                            <option value="{{ $l->id }}">
-                                {{ $l->nama_lokasi }}
-                            </option>
-                        @endforeach
-
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block mb-2 font-semibold">
-                        Kategori
-                    </label>
-
-                    <select
-                        id="editKategori"
-                        name="kategori_kerusakan_id"
-                        class="w-full border rounded-lg px-3 py-2">
-
-                        @foreach($kategori as $k)
-                            <option value="{{ $k->id }}">
-                                {{ $k->nama_kategori }}
-                            </option>
-                        @endforeach
-
-                    </select>
-                </div>
-
-                <div class="col-span-2">
-                    <label class="block mb-2 font-semibold">
-                        Deskripsi
-                    </label>
-
-                    <textarea
-                        id="editDeskripsi"
-                        name="deskripsi"
-                        rows="4"
-                        class="w-full border rounded-lg px-3 py-2"
-                        required></textarea>
-                </div>
-
-                <div class="col-span-2">
-                <label class="block mb-2 font-semibold">
-                  Status
-                 </label>
-
-                    <select
-                  id="editStatus"
-                 name="status"
-                 class="w-full border rounded-lg px-3 py-2">
-
-                <option value="Menunggu">Menunggu</option>
-                <option value="Diproses">Diproses</option>
-                <option value="Selesai">Selesai</option>
-
-                 </select>
-                </div>
-                <div class="col-span-2">
-
-                    <label class="block mb-2 font-semibold">
-                        Petugas
-                    </label>
-
-                    <select
-                        id="editPetugas"
-                        name="petugas_id"
-                        class="w-full border rounded-lg px-3 py-2">
-
-                        <option value="">-- Pilih Petugas --</option>
-
-                        @foreach($petugas as $p)
-
-                            <option value="{{ $p->id }}">
-                                {{ $p->name }}
-                            </option>
-
-                        @endforeach
-
-                    </select>
-
-                </div>
-                <div class="col-span-2">
-                    <label class="block mb-2 font-semibold">
-                        Ganti Foto (Opsional)
-                    </label>
-
-                    <input
-                        type="file"
-                        name="foto"
-                        accept="image/*"
-                        class="w-full border rounded-lg px-3 py-2">
-                </div>
-
-            </div>
-
-            <div class="flex justify-end gap-2 border-t px-6 py-4">
-
-                <button
-                    type="button"
-                    onclick="tutupModalEdit()"
-                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
-
-                    Batal
-
-                </button>
-
-                <button
-                    type="submit"
-                    class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">
-
-                    Update
-
-                </button>
-
-            </div>
-
-        </form>
-
-    </div>
-
-</div>
-    {{-- Modal Delete akan ditempel di sini --}}
-    <!-- Modal Delete -->
-<div id="modalDelete"
-    class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-
-    <div class="bg-white rounded-xl shadow-lg w-full max-w-md">
-
-        <div class="p-6 text-center">
-
-            <div class="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-red-100">
-
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    class="w-8 h-8 text-red-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor">
-
-                    <path stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-
-                </svg>
-
-            </div>
-
-            <h2 class="mt-4 text-xl font-bold">
-                Hapus Laporan
-            </h2>
-
-            <p class="mt-2 text-gray-600">
-                Apakah Anda yakin ingin menghapus laporan ini?
-            </p>
-
-            <form id="formDelete" method="POST">
-
-                @csrf
-                @method('DELETE')
-
-                <div class="flex justify-center gap-3 mt-6">
-
-                    <button
-                        type="button"
-                        onclick="tutupDelete()"
-                        class="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded">
-
-                        Batal
-
-                    </button>
-
-                    <button
-                        type="submit"
-                        class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded">
-
-                        Ya, Hapus
-
-                    </button>
-
-                </div>
-
-            </form>
-
-        </div>
-
-    </div>
-    <script>
-
-function editLaporan(
-    id,
-    judul,
-    lokasi,
-    kategori,
-    deskripsi,
-    status,
-    petugas
-)
-{
-    document.getElementById('editJudul').value = judul;
-    document.getElementById('editLokasi').value = lokasi;
-    document.getElementById('editKategori').value = kategori;
-    document.getElementById('editDeskripsi').value = deskripsi;
-    document.getElementById('editStatus').value = status;
-    document.getElementById('editPetugas').value = petugas;
-
-    document.getElementById('formEdit').action = "/laporan/" + id;
-
-    document.getElementById('modalEdit').classList.remove('hidden');
-}
-
-function tutupModalEdit()
-{
-    document.getElementById('modalEdit').classList.add('hidden');
-}
-
-function hapusLaporan(id)
-{
-    document.getElementById('formDelete').action = "/laporan/" + id;
-
-    document.getElementById('modalDelete').classList.remove('hidden');
-}
-
-function tutupDelete()
-{
-    document.getElementById('modalDelete').classList.add('hidden');
-}
-
-</script>
-
-</div>
 
 </x-app-layout>

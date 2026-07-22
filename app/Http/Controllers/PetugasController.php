@@ -15,52 +15,55 @@ class PetugasController extends Controller
         return view('petugas.index', compact('petugas'));
     }
 
-  public function store(Request $request)
-{
-    $request->validate([
-        'name' => 'required|max:255',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|min:6',
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+        ]);
 
-    User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'role' => 'petugas',
-    ]);
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'petugas',
+        ]);
 
-    return redirect()->route('petugas.index')
-        ->with('success', 'Petugas berhasil ditambahkan.');
-}
+        return redirect()->route('petugas.index')
+            ->with('success', 'Petugas berhasil ditambahkan.');
+    }
+    public function update(Request $request, $id)
+    {
+        $petugas = User::findOrFail($id);
 
-public function update(Request $request, User $petugas)
-{
-    $request->validate([
-        'name' => 'required|max:255',
-        'email' => 'required|email|unique:users,email,' . $petugas->id,
-    ]);
+        $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users,email,' . $petugas->id,
+        ]);
 
-    $data = [
-        'name' => $request->name,
-        'email' => $request->email,
-    ];
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+        ];
 
-    if ($request->filled('password')) {
-        $data['password'] = Hash::make($request->password);
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $petugas->update($data);
+
+        return redirect()->route('petugas.index')
+            ->with('success', 'Petugas berhasil diupdate.');
     }
 
-    $petugas->update($data);
+    public function destroy($id)
+    {
+        $petugas = User::findOrFail($id);
 
-    return redirect()->route('petugas.index')
-        ->with('success', 'Petugas berhasil diupdate.');
-}
+        $petugas->delete();
 
-public function destroy(User $petugas)
-{
-    $petugas->delete();
-
-    return redirect()->route('petugas.index')
-        ->with('success', 'Petugas berhasil dihapus.');
-}
+        return redirect()->route('petugas.index')
+            ->with('success', 'Petugas berhasil dihapus.');
+    }
 }

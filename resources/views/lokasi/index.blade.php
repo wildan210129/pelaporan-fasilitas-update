@@ -1,136 +1,355 @@
 <x-app-layout>
+
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Data Lokasi') }}
-        </h2>
-    </x-slot>
+        <div class="flex items-center justify-between">
 
-    <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div>
 
-            @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                    {{ session('success') }}
-                </div>
-            @endif
+                <h2 class="text-2xl font-bold text-gray-800">
+                    📍 Data Lokasi
+                </h2>
 
-            <div class="bg-white shadow rounded-lg p-6">
-
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold">Daftar Lokasi</h3>
-<button
-    onclick="document.getElementById('modalTambah').classList.remove('hidden')"
-    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-    + Tambah Lokasi
-</button>
-                </div>
-
-                <table class="w-full border border-gray-300">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="border px-4 py-2">No</th>
-                            <th class="border px-4 py-2">Nama Lokasi</th>
-                            <th class="border px-4 py-2">Aksi</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @forelse($lokasi as $item)
-                            <tr>
-                                <td class="border px-4 py-2">
-                                    {{ $loop->iteration }}
-                                </td>
-
-                                <td class="border px-4 py-2">
-                                    {{ $item->nama_lokasi }}
-                                </td>
-
-                                <td class="border px-4 py-2">
-
-    <button
-        onclick="editLokasi('{{ $item->id }}', '{{ $item->nama_lokasi }}')"
-        class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
-        Edit
-    </button>
-
-    <form action="{{ route('lokasi.destroy', $item->id) }}"
-          method="POST"
-          class="inline">
-        @csrf
-        @method('DELETE')
-
-        <button
-    type="button"
-    onclick="hapusLokasi('{{ $item->id }}')"
-    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
-    Hapus
-</button>
-    </form>
-
-</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3" class="text-center border py-4">
-                                    Belum ada data lokasi.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-
-                </table>
+                <p class="text-gray-500 mt-1">
+                    Kelola semua lokasi fasilitas sekolah
+                </p>
 
             </div>
 
         </div>
-    </div>
-    <!-- Modal Tambah Lokasi -->
-<div id="modalTambah"
-    class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    </x-slot>
 
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-md">
+    <div class="py-8">
 
-        <div class="flex justify-between items-center border-b px-6 py-4">
-            <h2 class="text-lg font-bold">Tambah Lokasi</h2>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            <button
-                onclick="document.getElementById('modalTambah').classList.add('hidden')"
-                class="text-gray-500 text-2xl">
-                &times;
-            </button>
+            {{-- Alert --}}
+            @if(session('success'))
+
+                <div class="mb-6 rounded-xl border border-green-200 bg-green-50 p-4 text-green-700 shadow-sm">
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="text-2xl">
+                            ✅
+                        </div>
+
+                        <div>
+
+                            <h3 class="font-semibold">
+                                Berhasil
+                            </h3>
+
+                            <p>
+                                {{ session('success') }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            @endif
+
+            <div class="bg-white rounded-2xl shadow-xl border border-gray-100">
+
+                {{-- Header Card --}}
+                <div class="p-6 border-b border-gray-100">
+
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+                        <div>
+
+                            <h3 class="text-xl font-bold text-gray-800">
+
+                                📍 Daftar Lokasi
+
+                            </h3>
+
+                            <p class="text-gray-500 text-sm mt-1">
+
+                                Seluruh lokasi fasilitas sekolah yang dapat dipilih ketika membuat laporan.
+
+                            </p>
+
+                        </div>
+
+                        <div class="flex gap-3">
+
+                            <div class="relative">
+
+                                <input
+                                    id="searchLokasi"
+                                    type="text"
+                                    placeholder="Cari lokasi..."
+                                    class="w-64 rounded-xl border-gray-300 pl-10 focus:border-blue-500 focus:ring-blue-500">
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="absolute left-3 top-3 h-5 w-5 text-gray-400"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M21 21l-4.35-4.35M16 10a6 6 0 11-12 0 6 6 0 0112 0z"/>
+
+                                </svg>
+
+                            </div>
+
+                            <button
+
+                                onclick="document.getElementById('modalTambah').classList.remove('hidden')"
+
+                                class="bg-blue-600 hover:bg-blue-700 transition text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg">
+
+                                + Tambah Lokasi
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {{-- Table --}}
+                <div class="overflow-x-auto">
+
+                    <table class="min-w-full" id="tableLokasi">
+
+                        <thead class="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+
+                            <tr>
+
+                                <th class="px-6 py-4 text-center w-20">
+                                    No
+                                </th>
+
+                                <th class="px-6 py-4 text-left">
+                                    Nama Lokasi
+                                </th>
+
+                                <th class="px-6 py-4 text-center w-60">
+                                    Aksi
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody class="divide-y divide-gray-100 bg-white">
+                        
+                        @forelse($lokasi as $item)
+
+<tr class="hover:bg-blue-50 transition duration-200">
+
+    <td class="px-6 py-4 text-center">
+
+        <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-700 font-bold">
+
+            {{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}
+
         </div>
 
-        <form action="{{ route('lokasi.store') }}" method="POST">
+    </td>
+
+    <td class="px-6 py-4">
+
+        <div class="flex items-center gap-4">
+
+            <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-2xl">
+
+                📍
+
+            </div>
+
+            <div>
+
+                <h4 class="font-semibold text-gray-800 text-lg">
+
+                    {{ $item->nama_lokasi }}
+
+                </h4>
+
+                <p class="text-sm text-gray-500">
+
+                    Lokasi fasilitas sekolah
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </td>
+
+    <td class="px-6 py-4">
+
+        <div class="flex justify-center gap-3">
+
+            <button
+
+                onclick="editLokasi('{{ $item->id }}','{{ $item->nama_lokasi }}')"
+
+                class="bg-amber-400 hover:bg-amber-500 text-white px-4 py-2 rounded-xl shadow font-medium transition">
+
+                ✏ Edit
+
+            </button>
+
+            <button
+
+                onclick="hapusLokasi('{{ $item->id }}')"
+
+                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl shadow font-medium transition">
+
+                🗑 Hapus
+
+            </button>
+
+        </div>
+
+    </td>
+
+</tr>
+
+@empty
+
+<tr>
+
+    <td colspan="3" class="py-14">
+
+        <div class="flex flex-col items-center justify-center">
+
+            <div class="text-6xl mb-4">
+
+                📍
+
+            </div>
+
+            <h3 class="text-xl font-semibold text-gray-700">
+
+                Belum Ada Data Lokasi
+
+            </h3>
+
+            <p class="text-gray-500 mt-2">
+
+                Silakan tambahkan lokasi baru.
+
+            </p>
+
+        </div>
+
+    </td>
+
+</tr>
+
+@endforelse
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{{-- =========================
+     MODAL TAMBAH LOKASI
+========================= --}}
+
+<div id="modalTambah"
+    class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+
+        {{-- Header --}}
+        <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-5 text-white">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <h2 class="text-xl font-bold">
+                        📍 Tambah Lokasi
+                    </h2>
+
+                    <p class="text-blue-100 text-sm mt-1">
+                        Tambahkan lokasi fasilitas sekolah.
+                    </p>
+
+                </div>
+
+                <button
+                    onclick="tutupModalTambah()"
+                    class="text-3xl hover:rotate-90 transition">
+
+                    &times;
+
+                </button>
+
+            </div>
+
+        </div>
+
+        {{-- Form --}}
+        <form
+            action="{{ route('lokasi.store') }}"
+            method="POST">
+
             @csrf
 
             <div class="p-6">
 
-                <label class="block mb-2 font-semibold">
+                <label class="block font-semibold text-gray-700 mb-2">
+
                     Nama Lokasi
+
                 </label>
 
                 <input
                     type="text"
                     name="nama_lokasi"
-                    class="w-full border rounded-lg px-3 py-2"
-                    placeholder="Masukkan nama lokasi"
+                    placeholder="Contoh: Laboratorium Komputer"
+                    class="w-full rounded-xl border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                     required>
+
+                <p class="text-sm text-gray-500 mt-2">
+
+                    Lokasi ini akan muncul pada saat siswa membuat laporan.
+
+                </p>
 
             </div>
 
-            <div class="flex justify-end gap-2 px-6 py-4 border-t">
+            {{-- Footer --}}
+            <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3">
 
                 <button
                     type="button"
-                    onclick="document.getElementById('modalTambah').classList.add('hidden')"
-                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+                    onclick="tutupModalTambah()"
+                    class="px-5 py-2 rounded-xl bg-gray-300 hover:bg-gray-400 transition">
+
                     Batal
+
                 </button>
 
                 <button
                     type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                    Simpan
+                    class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-lg transition">
+
+                    💾 Simpan
+
                 </button>
 
             </div>
@@ -140,55 +359,92 @@
     </div>
 
 </div>
-<!-- Modal Edit -->
+{{-- =========================
+     MODAL EDIT LOKASI
+========================= --}}
+
 <div id="modalEdit"
-    class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
 
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-md">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
 
-        <div class="flex justify-between items-center border-b px-6 py-4">
-            <h2 class="text-lg font-bold">Edit Lokasi</h2>
+        {{-- Header --}}
+        <div class="bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-5 text-white">
 
-            <button
-                type="button"
-                onclick="tutupModalEdit()"
-                class="text-2xl text-gray-500">
-                &times;
-            </button>
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <h2 class="text-xl font-bold">
+                        ✏ Edit Lokasi
+                    </h2>
+
+                    <p class="text-amber-100 text-sm mt-1">
+                        Perbarui nama lokasi fasilitas sekolah.
+                    </p>
+
+                </div>
+
+                <button
+                    type="button"
+                    onclick="tutupModalEdit()"
+                    class="text-3xl hover:rotate-90 transition">
+
+                    &times;
+
+                </button>
+
+            </div>
+
         </div>
 
-        <form id="formEdit" method="POST">
+        <form
+            id="formEdit"
+            method="POST">
+
             @csrf
             @method('PUT')
 
             <div class="p-6">
 
-                <label class="block mb-2 font-semibold">
+                <label class="block font-semibold text-gray-700 mb-2">
+
                     Nama Lokasi
+
                 </label>
 
                 <input
+                    id="editNama"
                     type="text"
-                    id="editNamaLokasi"
                     name="nama_lokasi"
-                    class="w-full border rounded-lg px-3 py-2"
+                    class="w-full rounded-xl border-gray-300 focus:ring-amber-500 focus:border-amber-500"
                     required>
+
+                <p class="text-sm text-gray-500 mt-2">
+
+                    Pastikan nama lokasi sudah benar sebelum disimpan.
+
+                </p>
 
             </div>
 
-            <div class="flex justify-end gap-2 px-6 py-4 border-t">
+            <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3">
 
                 <button
                     type="button"
                     onclick="tutupModalEdit()"
-                    class="bg-gray-500 text-white px-4 py-2 rounded">
+                    class="px-5 py-2 rounded-xl bg-gray-300 hover:bg-gray-400 transition">
+
                     Batal
+
                 </button>
 
                 <button
                     type="submit"
-                    class="bg-blue-600 text-white px-4 py-2 rounded">
-                    Update
+                    class="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white shadow-lg transition">
+
+                    💾 Update
+
                 </button>
 
             </div>
@@ -198,68 +454,93 @@
     </div>
 
 </div>
+{{-- =========================
+     MODAL HAPUS LOKASI
+========================= --}}
 
-<!-- Modal Hapus -->
 <div id="modalDelete"
-    class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
 
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
 
-        <div class="p-6 text-center">
+        {{-- Header --}}
+        <div class="bg-gradient-to-r from-red-500 to-red-600 px-6 py-5 text-white text-center">
 
-            <div class="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-red-100">
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     class="w-8 h-8 text-red-600"
-                     fill="none"
-                     viewBox="0 0 24 24"
-                     stroke="currentColor">
-                    <path stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-                </svg>
+            <div class="w-20 h-20 mx-auto rounded-full bg-white/20 flex items-center justify-center text-5xl">
+
+                🗑
+
             </div>
 
-            <h2 class="mt-4 text-xl font-bold">
+            <h2 class="mt-4 text-2xl font-bold">
+
                 Hapus Lokasi
+
             </h2>
 
-            <p class="text-gray-600 mt-2">
-                Apakah Anda yakin ingin menghapus data ini?
+            <p class="text-red-100 mt-2">
+
+                Data yang dihapus tidak dapat dikembalikan.
+
             </p>
 
-            <form id="formDelete" method="POST" class="mt-6">
-                @csrf
-                @method('DELETE')
+        </div>
 
-                <div class="flex justify-center gap-3">
+        {{-- Body --}}
+        <div class="p-6 text-center">
 
-                    <button
-                        type="button"
-                        onclick="tutupDelete()"
-                        class="px-5 py-2 rounded-lg bg-gray-300 hover:bg-gray-400">
-                        Batal
-                    </button>
+            <p class="text-gray-600">
 
-                    <button
-                        type="submit"
-                        class="px-5 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white">
-                        Ya, Hapus
-                    </button>
+                Apakah Anda yakin ingin menghapus lokasi ini?
 
-                </div>
+            </p>
 
-            </form>
+            <p class="text-sm text-gray-400 mt-2">
+
+                Tindakan ini bersifat permanen.
+
+            </p>
 
         </div>
+
+        {{-- Footer --}}
+        <form id="formDelete" method="POST">
+
+            @csrf
+            @method('DELETE')
+
+            <div class="bg-gray-50 px-6 py-4 flex justify-center gap-3">
+
+                <button
+                    type="button"
+                    onclick="tutupDelete()"
+                    class="px-5 py-2 rounded-xl bg-gray-300 hover:bg-gray-400 transition">
+
+                    Batal
+
+                </button>
+
+                <button
+                    type="submit"
+                    class="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white shadow-lg transition">
+
+                    🗑 Ya, Hapus
+
+                </button>
+
+            </div>
+
+        </form>
 
     </div>
 
 </div>
 <script>
+
 function editLokasi(id, nama)
 {
-    document.getElementById('editNamaLokasi').value = nama;
+    document.getElementById('editNama').value = nama;
+
     document.getElementById('formEdit').action = "/lokasi/" + id;
 
     document.getElementById('modalEdit').classList.remove('hidden');
@@ -269,13 +550,16 @@ function tutupModalEdit()
 {
     document.getElementById('modalEdit').classList.add('hidden');
 }
-</script>
 
-<script>
+function tutupModalTambah()
+{
+    document.getElementById('modalTambah').classList.add('hidden');
+}
 
 function hapusLokasi(id)
 {
     document.getElementById('formDelete').action = "/lokasi/" + id;
+
     document.getElementById('modalDelete').classList.remove('hidden');
 }
 
@@ -285,5 +569,5 @@ function tutupDelete()
 }
 
 </script>
-</x-app-layout> 
 
+</x-app-layout>
