@@ -31,6 +31,8 @@ class UserController extends Controller
             'role' => $request->role,
         ]);
 
+        activity('Menambah User', 'User');
+
         return redirect()->route('user.index')
             ->with('success', 'User berhasil ditambahkan.');
     }
@@ -55,12 +57,16 @@ class UserController extends Controller
 
         $user->update($data);
 
+        activity('Mengubah User', 'User');
+
         return redirect()->route('user.index')
             ->with('success', 'User berhasil diupdate.');
     }
 
     public function destroy(User $user)
     {
+        activity('Menghapus User', 'User');
+
         $user->delete();
 
         return redirect()->route('user.index')

@@ -81,6 +81,15 @@
                         🛠 Petugas
                     </a>
 
+                    <a href="{{ route('activity.index') }}"
+                        class="px-4 py-2 rounded-xl transition-all duration-300
+                    {{ request()->routeIs('activity.*')
+                        ? 'bg-blue-600 text-white shadow-lg'
+                        : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600' }}">
+
+                        📜 Activity Log
+                    </a>
+
                     @endif
 
                     <a href="{{ route('laporan.index') }}"

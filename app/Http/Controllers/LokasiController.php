@@ -22,19 +22,20 @@ class LokasiController extends Controller
 
     // Menyimpan data lokasi
     public function store(Request $request)
-{
-    $request->validate([
-        'nama_lokasi' => 'required|max:255'
-    ]);
+    {
+        $request->validate([
+            'nama_lokasi' => 'required|max:255'
+        ]);
 
-    Lokasi::create([
-        'nama_lokasi' => $request->nama_lokasi
-    ]);
+        Lokasi::create([
+            'nama_lokasi' => $request->nama_lokasi
+        ]);
 
-    return redirect()->route('lokasi.index')
-        ->with('success', 'Lokasi berhasil ditambahkan.');
-}
+        activity('Menambah Lokasi', 'Lokasi');
 
+        return redirect()->route('lokasi.index')
+            ->with('success', 'Lokasi berhasil ditambahkan.');
+    }
     // Menampilkan detail lokasi
     public function show(Lokasi $lokasi)
     {
@@ -49,24 +50,28 @@ class LokasiController extends Controller
 
     // Mengupdate data lokasi
     public function update(Request $request, Lokasi $lokasi)
-{
-    $request->validate([
-        'nama_lokasi' => 'required|max:255',
-    ]);
+    {
+        $request->validate([
+            'nama_lokasi' => 'required|max:255',
+        ]);
 
-    $lokasi->update([
-        'nama_lokasi' => $request->nama_lokasi,
-    ]);
+        $lokasi->update([
+            'nama_lokasi' => $request->nama_lokasi,
+        ]);
 
-    return redirect()->route('lokasi.index')
-        ->with('success', 'Lokasi berhasil diupdate.');
-}
+        activity('Mengubah Lokasi', 'Lokasi');
+
+        return redirect()->route('lokasi.index')
+            ->with('success', 'Lokasi berhasil diupdate.');
+    }
     // Menghapus lokasi
     public function destroy(Lokasi $lokasi)
-{
-    $lokasi->delete();
+    {
+        activity('Menghapus Lokasi', 'Lokasi');
 
-    return redirect()->route('lokasi.index')
-        ->with('success', 'Lokasi berhasil dihapus.');
-}
+        $lokasi->delete();
+
+        return redirect()->route('lokasi.index')
+            ->with('success', 'Lokasi berhasil dihapus.');
+    }
 }

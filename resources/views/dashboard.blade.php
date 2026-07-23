@@ -96,7 +96,7 @@
 
                         <div>
 
-                            <p class="text-gray-500">
+                            <p class="text-lg md:text-xl font-bold text-gray-800">
 
                                 Total Laporan
 
@@ -136,7 +136,7 @@
 
                         <div>
 
-                            <p class="text-gray-500">
+                            <p class="text-lg md:text-xl font-bold text-gray-800">
 
                                 Menunggu
 
@@ -176,7 +176,7 @@
 
                         <div>
 
-                            <p class="text-gray-500">
+                            <p class="text-lg md:text-xl font-bold text-gray-800">
 
                                 Diproses
 
@@ -216,7 +216,7 @@
 
                         <div>
 
-                            <p class="text-gray-500">
+                            <p class="text-lg md:text-xl font-bold text-gray-800">
 
                                 Selesai
 
@@ -250,10 +250,10 @@
             </div>
 
             <!-- Laporan Terbaru -->
-            <div class="mt-8 bg-white rounded-3xl shadow-lg overflow-hidden">
+            <div class="mt-8 bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-200">
 
                 <div
-                    class="flex items-center justify-between px-8 py-6 bg-gradient-to-r from-blue-600 to-indigo-600">
+                    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-5 md:px-8 py-6 bg-gradient-to-r from-blue-600 to-indigo-600">
 
                     <div>
 
@@ -272,7 +272,7 @@
                     </div>
 
                     <span
-                        class="bg-white text-blue-600 px-4 py-2 rounded-full font-semibold">
+                        class="w-fit bg-white text-blue-600 px-4 py-2 rounded-full font-semibold">
 
                         {{ count($laporanTerbaru) }} Laporan
 
@@ -332,7 +332,7 @@
 
                                         <img
                                             src="{{ asset('storage/'.$laporan->foto) }}"
-                                            class="w-14 h-14 rounded-xl object-cover shadow">
+                                            class="w-12 h-12 md:w-14 md:h-14 rounded-xl object-cover shadow">
 
                                         @else
 
@@ -385,7 +385,7 @@
                                     @if($laporan->status == 'Menunggu')
 
                                     <span
-                                        class="px-4 py-2 rounded-full bg-yellow-100 text-yellow-700 font-semibold">
+                                        class="px-3 py-2 text-sm rounded-full bg-yellow-100 text-yellow-700 font-semibold">
 
                                         ⏳ Menunggu
 
@@ -394,7 +394,7 @@
                                     @elseif($laporan->status == 'Diproses')
 
                                     <span
-                                        class="px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-semibold">
+                                        class="px-3 py-2 text-sm rounded-full bg-blue-100 text-blue-700 font-semibold">
 
                                         🔧 Diproses
 
@@ -403,7 +403,7 @@
                                     @else
 
                                     <span
-                                        class="px-4 py-2 rounded-full bg-green-100 text-green-700 font-semibold">
+                                        class="px-3 py-2 text-sm rounded-full bg-green-100 text-green-700 font-semibold">
 
                                         ✅ Selesai
 

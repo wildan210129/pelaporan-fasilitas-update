@@ -23,6 +23,8 @@ class KategoriKerusakanController extends Controller
             'nama_kategori' => $request->nama_kategori
         ]);
 
+        activity('Menambah Kategori', 'Kategori Kerusakan');
+
         return redirect()->route('kategori.index')
             ->with('success', 'Kategori berhasil ditambahkan.');
     }
@@ -37,12 +39,16 @@ class KategoriKerusakanController extends Controller
             'nama_kategori' => $request->nama_kategori
         ]);
 
+        activity('Mengubah Kategori', 'Kategori Kerusakan');
+
         return redirect()->route('kategori.index')
             ->with('success', 'Kategori berhasil diupdate.');
     }
 
     public function destroy(KategoriKerusakan $kategori)
     {
+        activity('Menghapus Kategori', 'Kategori Kerusakan');
+
         $kategori->delete();
 
         return redirect()->route('kategori.index')

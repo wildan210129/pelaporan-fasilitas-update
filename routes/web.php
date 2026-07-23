@@ -7,6 +7,7 @@ use App\Http\Controllers\KategoriKerusakanController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ActivityLogController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -38,6 +39,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::resource('petugas', App\Http\Controllers\PetugasController::class);
 
+    Route::get('/activity-log', [ActivityLogController::class, 'index'])
+        ->name('activity.index');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

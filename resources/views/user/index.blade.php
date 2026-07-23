@@ -2,11 +2,11 @@
 
     <x-slot name="header">
 
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
             <div>
 
-                <h2 class="text-3xl font-bold text-gray-800">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800">
 
                     👥 Data User
 
@@ -26,8 +26,7 @@
 
     <div class="py-8">
 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             @if(session('success'))
 
             <div class="mb-6 rounded-xl bg-green-100 border border-green-300 text-green-700 px-5 py-4">
@@ -58,16 +57,15 @@
 
                     </div>
 
-                    <div class="flex items-center gap-3">
+                    <div class="flex flex-col md:flex-row gap-3 w-full md:w-auto">
 
-                        <div class="relative">
+                        <div class="relative w-full">
 
                             <input
                                 id="searchUser"
                                 type="text"
                                 placeholder="Cari user..."
-                                class="pl-10 pr-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-
+                                class="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 class="w-5 h-5 absolute left-3 top-2.5 text-gray-400"
@@ -87,7 +85,7 @@
 
                         <button
                             onclick="document.getElementById('modalTambah').classList.remove('hidden')"
-                            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl shadow">
+                            class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl shadow">
 
                             + Tambah User
 
@@ -137,7 +135,7 @@
                                 <td class="px-6 py-4 text-center">
 
                                     <div class="inline-flex items-center justify-center
-                            w-10 h-10 rounded-full
+                            w-9 h-9 md:w-10 md:h-10 rounded-full
                             bg-blue-100 text-blue-700 font-bold">
 
                                         {{ str_pad($loop->iteration,2,'0',STR_PAD_LEFT) }}
@@ -215,7 +213,7 @@
 
                                 <td class="px-6 py-4">
 
-                                    <div class="flex justify-center gap-2">
+                                    <div class="flex flex-col sm:flex-row justify-center gap-2">
 
                                         <button
                                             onclick="editUser(
@@ -225,7 +223,7 @@
                             '{{ $item->role }}'
                         )"
                                             class="bg-yellow-500 hover:bg-yellow-600
-                               text-white px-4 py-2 rounded-lg shadow">
+                               text-white px-3 py-2 text-sm md:px-4 md:text-base rounded-lg shadow">
 
                                             ✏ Edit
 
@@ -234,7 +232,7 @@
                                         <button
                                             onclick="hapusUser('{{ $item->id }}')"
                                             class="bg-red-600 hover:bg-red-700
-                               text-white px-4 py-2 rounded-lg shadow">
+                               text-white px-3 py-2 text-sm md:px-4 md:text-base rounded-lg shadow">
 
                                             🗑 Hapus
 
