@@ -117,7 +117,9 @@
                 {{-- Table --}}
                 <div class="overflow-x-auto">
 
-                    <table class="min-w-full" id="tableLokasi">
+                    <div id="gridLokasi"></div>
+
+                    <table class="min-w-full hidden" id="tableLokasi">
 
                         <thead class="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
 
@@ -555,5 +557,53 @@
         function tutupDelete() {
             document.getElementById('modalDelete').classList.add('hidden');
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            $("#gridLokasi").dxDataGrid({
+
+                dataSource: [
+
+                    {
+                        no: 1,
+                        lokasi: "Laboratorium Komputer"
+                    },
+                    {
+                        no: 2,
+                        lokasi: "Perpustakaan"
+                    },
+                    {
+                        no: 3,
+                        lokasi: "Ruang Guru"
+                    }
+
+                ],
+
+                columns: [{
+                        dataField: "no",
+                        caption: "No",
+                        width: 80
+                    },
+                    {
+                        dataField: "lokasi",
+                        caption: "Nama Lokasi"
+                    }
+                ],
+
+                searchPanel: {
+                    visible: true
+                },
+
+                filterRow: {
+                    visible: true
+                },
+
+                paging: {
+                    pageSize: 5
+                }
+
+            });
+
+        });
     </script>
 </x-app-layout>
