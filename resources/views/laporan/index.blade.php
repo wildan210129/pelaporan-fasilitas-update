@@ -551,12 +551,9 @@
                                 </label>
 
                                 <select
-
                                     name="lokasi_id"
-
                                     required
-
-                                    class="mt-2 w-full rounded-xl border-gray-300 focus:border-blue-500">
+                                    class="select2 mt-2 w-full rounded-xl border-gray-300 focus:border-blue-500">
 
                                     <option value="">
 
@@ -587,13 +584,9 @@
                                 </label>
 
                                 <select
-
                                     name="kategori_kerusakan_id"
-
                                     required
-
-                                    class="mt-2 w-full rounded-xl border-gray-300 focus:border-blue-500">
-
+                                    class="select2 mt-2 w-full rounded-xl border-gray-300 focus:border-blue-500">
                                     <option value="">
 
                                         Pilih Kategori
@@ -777,13 +770,9 @@
                                 </label>
 
                                 <select
-
                                     id="editLokasi"
-
                                     name="lokasi_id"
-
-                                    class="mt-2 w-full rounded-xl border-gray-300">
-
+                                    class="select2 mt-2 w-full rounded-xl border-gray-300">
                                     @foreach($lokasi as $l)
 
                                     <option value="{{ $l->id }}">
@@ -807,13 +796,9 @@
                                 </label>
 
                                 <select
-
                                     id="editKategori"
-
                                     name="kategori_kerusakan_id"
-
-                                    class="mt-2 w-full rounded-xl border-gray-300">
-
+                                    class="select2 mt-2 w-full rounded-xl border-gray-300">
                                     @foreach($kategori as $k)
 
                                     <option value="{{ $k->id }}">
@@ -857,13 +842,9 @@
                                 </label>
 
                                 <select
-
                                     id="editStatus"
-
                                     name="status"
-
-                                    class="mt-2 w-full rounded-xl border-gray-300">
-
+                                    class="select2 mt-2 w-full rounded-xl border-gray-300">
                                     <option value="Menunggu">
 
                                         Menunggu
@@ -895,13 +876,9 @@
                                 </label>
 
                                 <select
-
                                     id="editPetugas"
-
                                     name="petugas_id"
-
-                                    class="mt-2 w-full rounded-xl border-gray-300">
-
+                                    class="select2 mt-2 w-full rounded-xl border-gray-300">
                                     <option value="">
 
                                         Pilih Petugas

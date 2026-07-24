@@ -14,6 +14,10 @@
 
     <!-- Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/25.1.5/css/dx.light.css">
 </head>
 
 <body class="font-sans antialiased bg-gradient-to-br from-slate-100 via-blue-50 to-slate-200">
@@ -25,11 +29,11 @@
 
         {{-- Header --}}
         @isset($header)
-            <header class="bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm sticky top-0 z-10">
-                <div class="max-w-7xl mx-auto py-6 px-6">
-                    {{ $header }}
-                </div>
-            </header>
+        <header class="bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm sticky top-0 z-10">
+            <div class="max-w-7xl mx-auto py-6 px-6">
+                {{ $header }}
+            </div>
+        </header>
         @endisset
 
         {{-- Content --}}
@@ -46,5 +50,17 @@
     </div>
 
 </body>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script src="https://cdn3.devexpress.com/jslib/25.1.5/js/dx.all.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
+</script>
 
 </html>

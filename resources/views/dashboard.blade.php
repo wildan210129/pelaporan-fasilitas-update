@@ -497,99 +497,47 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        const ctx = document.getElementById('chartLaporan');
+        document.addEventListener('DOMContentLoaded', function() {
 
-        new Chart(ctx, {
+            const canvas = document.getElementById('chartLaporan');
 
-            type: 'doughnut',
-
-            data: {
-
-                labels: [
-
-                    'Menunggu',
-
-                    'Diproses',
-
-                    'Selesai'
-
-                ],
-
-                datasets: [{
-
-                    data: [
-
-                        {
-                            {
-                                $menunggu
-                            }
-                        },
-
-                        {
-                            {
-                                $diproses
-                            }
-                        },
-
-                        {
-                            {
-                                $selesai
-                            }
-                        }
-
-                    ],
-
-                    backgroundColor: [
-
-                        '#FBBF24',
-
-                        '#3B82F6',
-
-                        '#22C55E'
-
-                    ],
-
-                    borderWidth: 0,
-
-                    hoverOffset: 15
-
-                }]
-
-            },
-
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                plugins: {
-
-                    legend: {
-
-                        position: 'bottom',
-
-                        labels: {
-
-                            usePointStyle: true,
-
-                            padding: 20,
-
-                            font: {
-
-                                size: 13
-
-                            }
-
-                        }
-
-                    }
-
-                }
-
+            if (!canvas) {
+                console.log('Canvas chart tidak ditemukan');
+                return;
             }
+
+            new Chart(canvas, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Menunggu', 'Diproses', 'Selesai'],
+                    datasets: [{
+                        label: 'Jumlah Laporan',
+                        data: [
+                            @json($menunggu),
+                            @json($diproses),
+                            @json($selesai)
+                        ],
+                        backgroundColor: [
+                            '#FBBF24',
+                            '#3B82F6',
+                            '#22C55E'
+                        ],
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
 
         });
     </script>
-
 </x-app-layout>

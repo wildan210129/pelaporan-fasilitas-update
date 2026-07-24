@@ -535,9 +535,7 @@
     <script>
         function editLokasi(id, nama) {
             document.getElementById('editNama').value = nama;
-
             document.getElementById('formEdit').action = "/lokasi/" + id;
-
             document.getElementById('modalEdit').classList.remove('hidden');
         }
 
@@ -551,7 +549,6 @@
 
         function hapusLokasi(id) {
             document.getElementById('formDelete').action = "/lokasi/" + id;
-
             document.getElementById('modalDelete').classList.remove('hidden');
         }
 
@@ -559,5 +556,4 @@
             document.getElementById('modalDelete').classList.add('hidden');
         }
     </script>
-
 </x-app-layout>
