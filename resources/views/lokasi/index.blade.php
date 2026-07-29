@@ -104,9 +104,7 @@
                             <button
                                 onclick="document.getElementById('modalTambah').classList.remove('hidden')"
                                 class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 transition text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg">
-
                                 + Tambah Lokasi
-
                             </button>
 
                         </div>
@@ -558,36 +556,28 @@
             document.getElementById('modalDelete').classList.add('hidden');
         }
 
+        const lokasiData = @json($lokasi);
+
         document.addEventListener("DOMContentLoaded", function() {
 
             $("#gridLokasi").dxDataGrid({
 
-                dataSource: [
+                dataSource: lokasiData,
+                columns: [
 
                     {
-                        no: 1,
-                        lokasi: "Laboratorium Komputer"
-                    },
-                    {
-                        no: 2,
-                        lokasi: "Perpustakaan"
-                    },
-                    {
-                        no: 3,
-                        lokasi: "Ruang Guru"
-                    }
-
-                ],
-
-                columns: [{
-                        dataField: "no",
                         caption: "No",
-                        width: 80
+                        width: 80,
+                        cellTemplate: function(container, options) {
+                            container.text(options.rowIndex + 1);
+                        }
                     },
+
                     {
-                        dataField: "lokasi",
+                        dataField: "nama_lokasi",
                         caption: "Nama Lokasi"
                     }
+
                 ],
 
                 searchPanel: {
@@ -598,8 +588,57 @@
                     visible: true
                 },
 
+                headerFilter: {
+                    visible: true
+                },
+
+                sorting: {
+                    mode: "multiple"
+                },
+
                 paging: {
-                    pageSize: 5
+                    pageSize: 10
+                },
+
+                pager: {
+                    visible: true,
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [10, 20, 50],
+                    showInfo: true,
+                    showNavigationButtons: true
+                },
+
+                export: {
+                    enabled: true,
+                    fileName: "Data_Lokasi",
+                    allowExportSelectedData: true
+                },
+
+                onExporting: function(e) {
+
+                    const workbook = new ExcelJS.Workbook();
+
+                    const worksheet = workbook.addWorksheet('Lokasi');
+
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet: worksheet
+                    }).then(function() {
+
+                        workbook.xlsx.writeBuffer().then(function(buffer) {
+
+                            saveAs(
+                                new Blob([buffer], {
+                                    type: "application/octet-stream"
+                                }),
+                                "DataLokasi.xlsx"
+                            );
+
+                        });
+
+                    });
+
+                    e.cancel = true;
                 }
 
             });
