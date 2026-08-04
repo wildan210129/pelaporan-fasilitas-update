@@ -192,6 +192,8 @@
 
                             type="text"
 
+                            id="inputCari"
+
                             placeholder="🔍 Cari laporan..."
 
                             class="rounded-xl border-gray-300 focus:ring-blue-500 focus:border-blue-500 w-72">
@@ -202,7 +204,7 @@
 
                 <div class="overflow-x-auto">
 
-                    <table class="min-w-full">
+                    <table class="min-w-full" id="tabelLaporan">
 
                         <thead class="bg-gray-100">
 
@@ -254,11 +256,11 @@
 
                         </thead>
 
-                        <tbody>
+                        <tbody id="tbodyLaporan">
 
                             @forelse($laporan as $item)
 
-                            <tr class="border-b hover:bg-blue-50 transition duration-200">
+                            <tr class="border-b hover:bg-blue-50 transition duration-200" data-search="{{ strtolower($item->judul.' '.$item->lokasi->nama_lokasi.' '.$item->kategori->nama_kategori.' '.$item->status) }}">
 
                                 <td class="px-6 py-5 font-semibold text-gray-600">
 
@@ -349,6 +351,8 @@
 
                                         src="{{ asset('storage/'.$item->foto) }}"
 
+                                        onclick="bukaFoto('{{ asset('storage/'.$item->foto) }}')"
+
                                         class="w-20 h-20 object-cover rounded-2xl border shadow mx-auto hover:scale-110 transition cursor-pointer">
 
                                     @else
@@ -382,23 +386,7 @@
 
                                         <button
 
-                                            onclick="editLaporan(
-
-'{{ $item->id }}',
-
-'{{ $item->judul }}',
-
-'{{ $item->lokasi_id }}',
-
-'{{ $item->kategori_kerusakan_id }}',
-
-`{{ $item->deskripsi }}`,
-
-'{{ $item->status }}',
-
-'{{ $item->petugas_id }}'
-
-)"
+                                            onclick="editLaporan({{ Js::from($item->id) }}, {{ Js::from($item->judul) }}, {{ Js::from($item->lokasi_id) }}, {{ Js::from($item->kategori_kerusakan_id) }}, {{ Js::from($item->deskripsi) }}, {{ Js::from($item->status) }}, {{ Js::from($item->petugas_id) }})"
 
                                             class="px-4 py-2 rounded-xl bg-yellow-500 text-white hover:bg-yellow-600 transition">
 
@@ -408,7 +396,7 @@
 
                                         <button
 
-                                            onclick="hapusLaporan('{{ $item->id }}')"
+                                            onclick="hapusLaporan({{ Js::from($item->id) }})"
 
                                             class="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 transition">
 
@@ -465,6 +453,10 @@
                         </tbody>
 
                     </table>
+
+                    <p id="pesanKosong" class="hidden text-center py-10 text-gray-500">
+                        Tidak ada laporan yang cocok dengan pencarian.
+                    </p>
 
                 </div>
 
@@ -772,6 +764,7 @@
                                 <select
                                     id="editLokasi"
                                     name="lokasi_id"
+                                    required
                                     class="select2 mt-2 w-full rounded-xl border-gray-300">
                                     @foreach($lokasi as $l)
 
@@ -798,6 +791,7 @@
                                 <select
                                     id="editKategori"
                                     name="kategori_kerusakan_id"
+                                    required
                                     class="select2 mt-2 w-full rounded-xl border-gray-300">
                                     @foreach($kategori as $k)
 
@@ -829,6 +823,8 @@
 
                                     rows="5"
 
+                                    required
+
                                     class="mt-2 w-full rounded-xl border-gray-300"></textarea>
 
                             </div>
@@ -844,6 +840,7 @@
                                 <select
                                     id="editStatus"
                                     name="status"
+                                    required
                                     class="select2 mt-2 w-full rounded-xl border-gray-300">
                                     <option value="Menunggu">
 
@@ -1031,6 +1028,25 @@
 
             </div>
 
+            <!-- ===================== -->
+            <!-- MODAL PREVIEW FOTO -->
+            <!-- ===================== -->
+
+            <div id="modalFoto"
+                class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+                onclick="tutupFoto()">
+
+                <button
+                    type="button"
+                    onclick="tutupFoto()"
+                    class="absolute top-6 right-6 text-white text-4xl hover:rotate-90 transition">
+                    &times;
+                </button>
+
+                <img id="fotoPreviewBesar" src="" class="max-w-full max-h-[85vh] rounded-2xl shadow-2xl">
+
+            </div>
+
             <script>
                 function editLaporan(
                     id,
@@ -1047,7 +1063,7 @@
                     document.getElementById('editKategori').value = kategori;
                     document.getElementById('editDeskripsi').value = deskripsi;
                     document.getElementById('editStatus').value = status;
-                    document.getElementById('editPetugas').value = petugas;
+                    document.getElementById('editPetugas').value = petugas ?? '';
 
                     document.getElementById('formEdit').action = "/laporan/" + id;
 
@@ -1075,6 +1091,19 @@
 
                 }
 
+                function bukaFoto(src) {
+
+                    document.getElementById('fotoPreviewBesar').src = src;
+                    document.getElementById('modalFoto').classList.remove('hidden');
+
+                }
+
+                function tutupFoto() {
+
+                    document.getElementById('modalFoto').classList.add('hidden');
+
+                }
+
                 // klik area hitam untuk menutup modal
                 window.onclick = function(e) {
 
@@ -1092,6 +1121,29 @@
                         hapus.classList.add('hidden');
 
                 }
+
+                // ===================== //
+                // PENCARIAN LAPORAN     //
+                // ===================== //
+
+                document.getElementById('inputCari').addEventListener('input', function(e) {
+
+                    const kata = e.target.value.toLowerCase().trim();
+                    const baris = document.querySelectorAll('#tbodyLaporan tr[data-search]');
+                    let adaHasil = false;
+
+                    baris.forEach(function(tr) {
+
+                        const cocok = tr.dataset.search.includes(kata);
+                        tr.style.display = cocok ? '' : 'none';
+
+                        if (cocok) adaHasil = true;
+
+                    });
+
+                    document.getElementById('pesanKosong').classList.toggle('hidden', adaHasil || baris.length === 0);
+
+                });
             </script>
 
             <style>
