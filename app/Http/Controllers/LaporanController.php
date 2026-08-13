@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\RiwayatStatus;
 use App\Models\User;
+use App\Exports\LaporanExport;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LaporanController extends Controller
 {
@@ -160,5 +163,54 @@ class LaporanController extends Controller
         );
 
         return view('laporan.show', compact('laporan'));
+    }
+
+    /**
+     * Export laporan ke Excel
+     */
+    public function exportExcel()
+    {
+        return Excel::download(
+            new LaporanExport(),
+            'data-laporan-kerusakan.xlsx'
+        );
+    }
+
+    /**
+     * Cetak laporan ke PDF
+     */
+    public function exportPdf()
+    {
+        if (auth()->user()->role == 'admin') {
+
+            $laporan = Laporan::with([
+                'lokasi',
+                'kategori',
+                'user',
+                'petugas'
+            ])
+                ->latest()
+                ->get();
+        } else {
+
+            $laporan = Laporan::with([
+                'lokasi',
+                'kategori',
+                'user',
+                'petugas'
+            ])
+                ->where('user_id', auth()->id())
+                ->latest()
+                ->get();
+        }
+
+        $pdf = Pdf::loadView(
+            'laporan.pdf',
+            compact('laporan')
+        );
+
+        $pdf->setPaper('a4', 'landscape');
+
+        return $pdf->download('data-laporan-kerusakan.pdf');
     }
 }

@@ -186,16 +186,31 @@
 
                     </div>
 
-                    <div class="mt-4 lg:mt-0">
+                    <div class="mt-4 lg:mt-0 flex flex-wrap items-center justify-end gap-2">
 
+                        {{-- Tombol Cetak PDF --}}
+                        <a
+                            href="{{ route('laporan.export.pdf') }}"
+                            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-700 transition shadow-sm">
+
+                            📄 Cetak PDF
+
+                        </a>
+
+                        {{-- Tombol Export Excel --}}
+                        <a
+                            href="{{ route('laporan.export.excel') }}"
+                            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition shadow-sm">
+
+                            📊 Excel
+
+                        </a>
+
+                        {{-- Pencarian --}}
                         <input
-
                             type="text"
-
                             id="inputCari"
-
                             placeholder="🔍 Cari laporan..."
-
                             class="rounded-xl border-gray-300 focus:ring-blue-500 focus:border-blue-500 w-72">
 
                     </div>

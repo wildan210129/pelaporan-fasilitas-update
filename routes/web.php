@@ -24,6 +24,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/laporan/export/excel', [LaporanController::class, 'exportExcel'])
+        ->name('laporan.export.excel');
+
+    Route::get('/laporan/export/pdf', [LaporanController::class, 'exportPdf'])
+        ->name('laporan.export.pdf');
+
     // Laporan (Admin & Siswa)
     Route::resource('laporan', LaporanController::class);
 });
