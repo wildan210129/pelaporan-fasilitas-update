@@ -12,20 +12,20 @@ class Laporan extends Model
     use HasFactory;
 
     protected $fillable = [
-    'user_id',
-    'lokasi_id',
-    'kategori_kerusakan_id',
-    'judul',
-    'deskripsi',
-    'foto',
-    'status',
-    'petugas_id',
-];
+        'user_id',
+        'lokasi_id',
+        'kategori_kerusakan_id',
+        'judul',
+        'deskripsi',
+        'foto',
+        'status',
+        'petugas_id',
+    ];
 
     public function riwayatStatus()
     {
         return $this->hasMany(RiwayatStatus::class)
-                ->latest();
+            ->latest();
     }
 
     public function user()
@@ -35,12 +35,12 @@ class Laporan extends Model
 
     public function lokasi()
     {
-        return $this->belongsTo(Lokasi::class);
+        return $this->belongsTo(Lokasi::class)->withTrashed();
     }
 
     public function kategori()
     {
-        return $this->belongsTo(KategoriKerusakan::class, 'kategori_kerusakan_id');
+        return $this->belongsTo(KategoriKerusakan::class, 'kategori_kerusakan_id')->withTrashed();
     }
 
     public function petugas()

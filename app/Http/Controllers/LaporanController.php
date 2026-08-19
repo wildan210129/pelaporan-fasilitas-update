@@ -85,39 +85,18 @@ class LaporanController extends Controller
 
     public function update(Request $request, Laporan $laporan)
     {
-
         if (auth()->user()->role != 'admin') {
             abort(403, 'Akses ditolak.');
         }
+
         $request->validate([
-            'judul' => 'required|max:255',
-            'lokasi_id' => 'required|exists:lokasis,id',
-            'kategori_kerusakan_id' => 'required|exists:kategori_kerusakans,id',
-            'deskripsi' => 'required',
             'status' => 'required|in:Menunggu,Diproses,Selesai',
             'petugas_id' => 'nullable|exists:users,id',
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $foto = $laporan->foto;
-
-        if ($request->hasFile('foto')) {
-
-            if ($laporan->foto && Storage::disk('public')->exists($laporan->foto)) {
-                Storage::disk('public')->delete($laporan->foto);
-            }
-
-            $foto = $request->file('foto')->store('laporan', 'public');
-        }
-
         $laporan->update([
-            'judul' => $request->judul,
-            'lokasi_id' => $request->lokasi_id,
-            'kategori_kerusakan_id' => $request->kategori_kerusakan_id,
-            'deskripsi' => $request->deskripsi,
             'status' => $request->status,
             'petugas_id' => $request->petugas_id,
-            'foto' => $foto,
         ]);
 
         RiwayatStatus::create([
@@ -125,13 +104,12 @@ class LaporanController extends Controller
             'user_id' => auth()->id(),
             'status' => $request->status,
             'keterangan' => 'Status diubah menjadi ' . $request->status,
-
         ]);
 
-        activity('Mengubah Status menjadi ' . $request->status, 'Laporan');
+        activity('Memproses laporan menjadi ' . $request->status, 'Laporan');
 
         return redirect()->route('laporan.index')
-            ->with('success', 'Laporan berhasil diupdate.');
+            ->with('success', 'Laporan berhasil diproses.');
     }
 
     public function destroy(Laporan $laporan)

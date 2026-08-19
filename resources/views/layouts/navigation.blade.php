@@ -45,48 +45,32 @@
 
                     @if(auth()->user()->role == 'admin')
 
-                    <a href="{{ route('lokasi.index') }}"
-                        class="px-4 py-2 rounded-xl transition-all duration-300
-                        {{ request()->routeIs('lokasi.*')
-                            ? 'bg-blue-600 text-white shadow-lg'
-                            : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600' }}">
-
-                        📍 Lokasi
-                    </a>
-
-                    <a href="{{ route('kategori.index') }}"
-                        class="px-4 py-2 rounded-xl transition-all duration-300
-                        {{ request()->routeIs('kategori.*')
-                            ? 'bg-blue-600 text-white shadow-lg'
-                            : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600' }}">
-
-                        📂 Kategori
-                    </a>
-
-                    <a href="{{ route('user.index') }}"
-                        class="px-4 py-2 rounded-xl transition-all duration-300
-                        {{ request()->routeIs('user.*')
-                            ? 'bg-blue-600 text-white shadow-lg'
-                            : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600' }}">
-
-                        👥 User
-                    </a>
-
-                    <a href="{{ route('petugas.index') }}"
-                        class="px-4 py-2 rounded-xl transition-all duration-300
-                        {{ request()->routeIs('petugas.*')
-                            ? 'bg-blue-600 text-white shadow-lg'
-                            : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600' }}">
-
-                        🛠 Petugas
-                    </a>
+                    <x-dropdown align="left" width="56">
+                        <x-slot name="trigger">
+                            <button type="button"
+                                class="px-4 py-2 rounded-xl transition-all duration-300 inline-flex items-center gap-1
+               {{ request()->routeIs('lokasi.*') || request()->routeIs('kategori.*') || request()->routeIs('user.*') || request()->routeIs('petugas.*')
+                   ? 'bg-blue-600 text-white shadow-lg'
+                   : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600' }}">
+                                🗂 Master
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                        </x-slot>
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('lokasi.index')">📍 Lokasi</x-dropdown-link>
+                            <x-dropdown-link :href="route('kategori.index')">📂 Kategori</x-dropdown-link>
+                            <x-dropdown-link :href="route('user.index')">👥 User</x-dropdown-link>
+                            <x-dropdown-link :href="route('petugas.index')">🛠 Petugas</x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
 
                     <a href="{{ route('activity.index') }}"
                         class="px-4 py-2 rounded-xl transition-all duration-300
-                    {{ request()->routeIs('activity.*')
-                        ? 'bg-blue-600 text-white shadow-lg'
-                        : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600' }}">
-
+   {{ request()->routeIs('activity.*')
+       ? 'bg-blue-600 text-white shadow-lg'
+       : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600' }}">
                         📜 Activity Log
                     </a>
 
@@ -228,39 +212,12 @@
                 </x-responsive-nav-link>
 
                 @if(auth()->user()->role == 'admin')
-
-                <x-responsive-nav-link
-                    :href="route('lokasi.index')"
-                    :active="request()->routeIs('lokasi.*')">
-
-                    Lokasi
-
-                </x-responsive-nav-link>
-
-                <x-responsive-nav-link
-                    :href="route('kategori.index')"
-                    :active="request()->routeIs('kategori.*')">
-
-                    Kategori Kerusakan
-
-                </x-responsive-nav-link>
-
-                <x-responsive-nav-link
-                    :href="route('user.index')"
-                    :active="request()->routeIs('user.*')">
-
-                    User
-
-                </x-responsive-nav-link>
-
-                <x-responsive-nav-link
-                    :href="route('petugas.index')"
-                    :active="request()->routeIs('petugas.*')">
-
-                    Petugas
-
-                </x-responsive-nav-link>
-
+                <div class="px-4 pt-2 pb-1 text-xs font-semibold text-gray-400 uppercase">Master</div>
+                <x-responsive-nav-link :href="route('lokasi.index')" :active="request()->routeIs('lokasi.*')">📍 Lokasi</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('kategori.index')" :active="request()->routeIs('kategori.*')">📂 Kategori</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('user.index')" :active="request()->routeIs('user.*')">👥 User</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('petugas.index')" :active="request()->routeIs('petugas.*')">🛠 Petugas</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('activity.index')" :active="request()->routeIs('activity.*')">📜 Activity Log</x-responsive-nav-link>
                 @endif
 
                 <x-responsive-nav-link
