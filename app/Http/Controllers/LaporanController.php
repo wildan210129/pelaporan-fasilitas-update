@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Laporan;
 use App\Models\Lokasi;
 use App\Models\KategoriKerusakan;
@@ -13,6 +14,9 @@ use App\Models\User;
 use App\Exports\LaporanExport;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Mail\LaporanDiprosesNotification;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class LaporanController extends Controller
 {
@@ -83,34 +87,6 @@ class LaporanController extends Controller
             ->with('success', 'Laporan berhasil ditambahkan.');
     }
 
-    public function update(Request $request, Laporan $laporan)
-    {
-        if (auth()->user()->role != 'admin') {
-            abort(403, 'Akses ditolak.');
-        }
-
-        $request->validate([
-            'status' => 'required|in:Menunggu,Diproses,Selesai',
-            'petugas_id' => 'nullable|exists:users,id',
-        ]);
-
-        $laporan->update([
-            'status' => $request->status,
-            'petugas_id' => $request->petugas_id,
-        ]);
-
-        RiwayatStatus::create([
-            'laporan_id' => $laporan->id,
-            'user_id' => auth()->id(),
-            'status' => $request->status,
-            'keterangan' => 'Status diubah menjadi ' . $request->status,
-        ]);
-
-        activity('Memproses laporan menjadi ' . $request->status, 'Laporan');
-
-        return redirect()->route('laporan.index')
-            ->with('success', 'Laporan berhasil diproses.');
-    }
 
     public function destroy(Laporan $laporan)
     {
@@ -129,6 +105,63 @@ class LaporanController extends Controller
 
         return redirect()->route('laporan.index')
             ->with('success', 'Laporan berhasil dihapus.');
+    }
+
+
+
+    public function update(Request $request, Laporan $laporan)
+    {
+        if (auth()->user()->role != 'admin') {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $request->validate([
+            'status' => 'required|in:Menunggu,Diproses,Selesai',
+            'petugas_id' => 'nullable|exists:users,id',
+        ]);
+
+        $petugasSebelumnya = $laporan->petugas_id;
+
+        $laporan->update([
+            'status' => $request->status,
+            'petugas_id' => $request->petugas_id,
+        ]);
+
+        RiwayatStatus::create([
+            'laporan_id' => $laporan->id,
+            'user_id' => auth()->id(),
+            'status' => $request->status,
+            'keterangan' => 'Status diubah menjadi ' . $request->status,
+        ]);
+
+        activity('Memproses laporan menjadi ' . $request->status, 'Laporan');
+
+        $pesanEmail = null;
+
+        // Kirim email ke petugas jika status "Diproses" dan ada petugas yang ditugaskan
+        if ($request->status === 'Diproses' && $request->petugas_id) {
+            try {
+                $laporan->load('petugas', 'lokasi', 'kategori');
+                if ($laporan->petugas && $laporan->petugas->email) {
+                    $isiEmail = "Laporan #{$laporan->id} telah ditugaskan kepada Anda.\n"
+                        . "Lokasi: {$laporan->lokasi->nama}\n"
+                        . "Kategori: {$laporan->kategori->nama}\n"
+                        . "Status: {$laporan->status}";
+
+                    Mail::raw($isiEmail, function ($message) use ($laporan) {
+                        $message->to($laporan->petugas->email)
+                            ->subject('Laporan Baru Ditugaskan');
+                    });
+                }
+            } catch (\Exception $e) {
+                Log::error('Gagal mengirim email notifikasi laporan #' . $laporan->id . ': ' . $e->getMessage());
+
+                $pesanEmail = ' Namun, notifikasi email ke petugas gagal terkirim.';
+            }
+        }
+
+        return redirect()->route('laporan.index')
+            ->with('success', 'Laporan berhasil diproses.' . $pesanEmail);
     }
 
     public function show(Laporan $laporan)

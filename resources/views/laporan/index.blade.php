@@ -851,8 +851,10 @@
                 });
 
                 function prosesLaporan(id, status, petugas) {
-                    document.getElementById('editStatus').value = status;
-                    document.getElementById('editPetugas').value = petugas ?? '';
+                    // Gunakan jQuery + trigger('change') supaya tampilan Select2 ikut ter-update
+                    $('#editStatus').val(status).trigger('change');
+                    $('#editPetugas').val(petugas ?? '').trigger('change');
+
                     document.getElementById('formEdit').action = "/laporan/" + id;
                     document.getElementById('modalEdit').classList.remove('hidden');
                 }
